@@ -158,6 +158,7 @@ public class Main extends PApplet
 					   if (world.getTileOccupant(pA) instanceof Miner){
 						   Miner miner = (Miner) world.getTileOccupant(pA);
 						   miner.setRate(miner.getRate() * 2);
+						   miner.setSeeking(Zombie.class);
 						   /*
 						   world.getTileOccupant(pA).remove(world);
 						   Zombie zombieAdd = new Zombie(zombieTest.getName() + zombieTest.zombieCount + 1,

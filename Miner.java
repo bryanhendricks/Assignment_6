@@ -22,6 +22,10 @@ public abstract class Miner
    {
       this.resource_count = count;
    }
+   
+   public void setSeeking(Class<?> seek){
+	   this.seeking = seek;
+   }
 
    public int getResourceCount()
    {
