@@ -19,6 +19,10 @@ public abstract class Actor
    {
       return this.rate;
    }
+   
+   public void setRate(int newRate){
+	   this.rate = newRate;
+   }
 
    protected void removePendingAction(Action action)
    {

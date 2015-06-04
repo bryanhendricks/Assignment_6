@@ -77,7 +77,6 @@ public class WorldModel
          }
          setCell(occupancy, pt, entity);
          entities.add(entity);
-         System.out.println(entities.size());
       }
    }
 

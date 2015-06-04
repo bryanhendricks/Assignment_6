@@ -104,6 +104,7 @@ public abstract class MobileAnimatedActor
 		   n.add(down);
 	   }
 	   
+	   
 	   return n;
    }
    

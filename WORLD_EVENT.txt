@@ -1,0 +1,11 @@
+1) Triggering the event
+	Click the mouse button on a tile to spawn a zombie.
+
+2) What happens
+	The mouse click spawn a Zombie entity, turns the nearby grass and rocks to dead grass (with a hole in the ground at the spawn point), and slows nearby Miners.
+
+3) Affected entities
+	The affected entities, the Miners, are slowed by doubling their movement rate values.
+
+4) The new entity
+	The Zombie that spawns at the source of the mouse click will seek out Miners, using a simpler pathing algorithm that doesn't take into account any obstacles, so they act more like typical zombies. If a Zombie reaches a Miner, the Miner will be turned into a Zombie, and seek out other Miners.

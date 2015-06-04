@@ -37,6 +37,13 @@ public class Main extends PApplet
    private PImage checked;
    
    private int drawCounter;
+   
+   private int viewPortX;
+   private int viewPortY;
+   
+   private Zombie zombieTest;
+   
+   private ArrayList<PImage> zombieImgs;
 
 
    public void setup()
@@ -59,19 +66,18 @@ public class Main extends PApplet
 
       // create world model
       world = new WorldModel(num_rows, num_cols, background);
-
+      
+      
+      
+      
+      
+      
       // load world
       Map<String, PropertyParser> parsers = buildPropertyParsers(world,
          imageStore, System.currentTimeMillis());
       loadWorld(world, SAVE_FILE_NAME, imageStore, parsers);
       
-      List<PImage> zombieImgs = new ArrayList<PImage>();
-      zombieImgs.add(loadImage("wyvern1.png"));
-      zombieImgs.add(loadImage("wyvern2.png"));
-      zombieImgs.add(loadImage("wyvern3.png"));
-      //world.addEntity(new Zombie("test zombie", new Point(3, 4), 5, 6, zombieImgs));
-      world.addEntity(new MinerNotFull("testMiner", new Point(4, 4), 5,
-    	      6, 2, zombieImgs));
+      
 
       // create world view
       view = new WorldView(SCREEN_WIDTH / TILE_WIDTH,
@@ -96,7 +102,78 @@ public class Main extends PApplet
       }
 
       Viewport viewport = view.drawViewport();
+      viewPortX = viewport.getCol();
+      viewPortY = viewport.getRow();
       
+   }
+   
+   public void mousePressed(){
+	   int x = mouseX / 32;
+	   int y = mouseY / 32;
+	   x += viewPortX;
+	   y += viewPortY;
+	   Point mousePoint = new Point(x, y);
+	   
+	   List<PImage> zombieImgs = new ArrayList<PImage>();
+	      zombieImgs.add(loadImage("zombie1.png"));
+	      zombieImgs.add(loadImage("zombie2.png"));
+	      zombieImgs.add(loadImage("zombie3.png"));
+	      zombieImgs.add(loadImage("zombie4.png"));
+	      zombieImgs.add(loadImage("zombie5.png"));
+	      
+	   zombieTest = new Zombie("test zombie", new Point(x, y), 2300, 300, zombieImgs, 0);
+	   world.addEntity(zombieTest);
+	   zombieTest.schedule(world, zombieTest.getRate(), imageStore);
+	   
+	   
+	   //Background
+	   List<PImage> spawnImg = new ArrayList<PImage>();
+	   spawnImg.add(loadImage("zombieSpawn.png"));
+	   Background spawnBgnd = new Background("New Background", spawnImg);
+	   world.setBackground(mousePoint, spawnBgnd);
+	   
+	   List<PImage> spawnArea = new ArrayList<PImage>();
+	   spawnArea.add(loadImage("zombieSpawn_Near.png"));
+	   Background spawnAreaBgnd = new Background("New Background", spawnArea);
+	   
+	   List<Point> affected = new ArrayList<Point>();
+	   for (int xSpawn = 1; xSpawn <= 5; xSpawn++){
+		   for (int ySpawn = 1; ySpawn <= 5; ySpawn++){
+			   if (xSpawn + ySpawn < 8){
+				   affected.add(new Point(x + xSpawn, y + ySpawn));
+				   affected.add(new Point(x - xSpawn, y - ySpawn));
+				   affected.add(new Point(x - xSpawn, y + ySpawn));
+				   affected.add(new Point(x + xSpawn, y - ySpawn));
+				   
+				   affected.add(new Point(x, y + ySpawn));
+				   affected.add(new Point(x, y - ySpawn));
+				   affected.add(new Point(x - xSpawn, y));
+				   affected.add(new Point(x + xSpawn, y));
+				   
+				   for (Point pA : affected){
+					   //if (!(world.getBackground(pA) is a rock)){
+					   world.setBackground(pA, spawnAreaBgnd);
+					   //}
+					   
+					   if (world.getTileOccupant(pA) instanceof Miner){
+						   Miner miner = (Miner) world.getTileOccupant(pA);
+						   miner.setRate(miner.getRate() * 2);
+						   /*
+						   world.getTileOccupant(pA).remove(world);
+						   Zombie zombieAdd = new Zombie(zombieTest.getName() + zombieTest.zombieCount + 1,
+								   pA, 2300, 300, zombieImgs, zombieTest.zombieCount);
+						   world.addEntity(zombieAdd);
+						   zombieAdd.schedule(world, zombieAdd.getRate(), imageStore);
+						   */
+					   }
+					   
+				   }
+				   
+				   
+				   affected = new ArrayList<Point>();
+			   }
+		   }
+	   }
    }
 
    public void keyPressed()
